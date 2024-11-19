@@ -1,0 +1,34 @@
+
+int* preorderTraversal(struct TreeNode* root, int* returnSize) {
+    struct TreeNode *curr = root;
+    int *resArr = (int*)malloc(100 * sizeof(int));
+
+    *returnSize = 0;
+
+    while (curr != NULL) {
+        if (curr->left == NULL) {
+            resArr[(*returnSize)++] = curr->val;
+            curr = curr->right;
+        } else {
+            struct TreeNode *prev = curr->left;
+            while (prev->right != NULL && prev->right != curr) {
+                prev = prev->right;
+            }
+            if (prev->right == NULL) {
+                prev->right = curr;
+                resArr[(*returnSize)++] = curr->val;
+                curr = curr->left;
+            } else {
+                prev->right = NULL;
+                curr = curr->right;
+            }
+        }
+    }
+
+    int *temp = realloc(resArr, *returnSize * sizeof(int));
+
+    if (temp)
+        resArr = temp;
+
+    return resArr;
+}
