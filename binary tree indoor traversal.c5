@@ -1,0 +1,28 @@
+void inorderHelper(struct TreeNode* root, int* result, int* returnSize) {
+    if (root == NULL) {
+        return; // Base case: if the node is null, return
+    }
+    
+    // Traverse left subtree
+    inorderHelper(root->left, result, returnSize); 
+
+    // Visit the current node
+    result[(*returnSize)++] = root->val; 
+
+    // Traverse right subtree
+    inorderHelper(root->right, result, returnSize); 
+}
+
+int* inorderTraversal(struct TreeNode* root, int* returnSize) {
+    *returnSize = 0; // Initialize returnSize to 0
+    int count = 100; // Assuming a maximum size initially; this could be improved
+    int* result = malloc(count * sizeof(int)); // Allocate memory for result array
+    
+    if (result == NULL) {
+        return NULL; // Check for allocation failure
+    }
+
+    // Call the helper function to perform inorder traversal
+    inorderHelper(root, result, returnSize); 
+    return result; // Return the array containing the inorder traversal
+}
