@@ -1,0 +1,41 @@
+int* postorderTraversal(struct TreeNode* root, int* returnSize) {
+    struct TreeNode *curr = root;
+    int *resArr = (int*)malloc(100 * sizeof(int));
+
+    *returnSize = 0;
+
+    while (curr != NULL) {
+        if (curr->right == NULL) {
+            resArr[(*returnSize)++] = curr->val;
+            curr = curr->left;
+        } else {
+            struct TreeNode *prev = curr->right;
+            while (prev->left != NULL && prev->left != curr) {
+                prev = prev->left;
+            }
+            if (prev->left == NULL) {
+                prev->left = curr;
+                resArr[(*returnSize)++] = curr->val;
+                curr = curr->right;
+            } else {
+                prev->left = NULL;
+                curr = curr->left;
+            }
+        }
+    }
+
+    int left = 0, right = *returnSize - 1;
+
+    while (left < right) {
+        resArr[left] ^= resArr[right];
+        resArr[right] ^= resArr[left];
+        resArr[left++] ^= resArr[right--];
+    }
+
+    int *temp = realloc(resArr, *returnSize * sizeof(int));
+
+    if (temp)
+        resArr = temp;
+
+    return resArr;
+}
