@@ -1,0 +1,47 @@
+typedef struct {
+    int key;    
+    int val;  
+
+    UT_hash_handle hh;  // makes this structure hashable
+} NODE, *PNODE;
+
+
+bool containsNearbyDuplicate(int* nums, int numsSize, int k) {
+    
+    PNODE pHt = NULL;
+    PNODE pNode = NULL;
+
+    for(int i = 0 ; i < numsSize ; i++)
+    {
+
+        HASH_FIND_INT(pHt, &nums[i], pNode);
+        if(pNode == NULL)
+        {
+            // element was not found
+            pNode = (PNODE)malloc(sizeof(NODE));
+            
+            pNode->key = nums[i];
+            pNode->val = i;
+
+            HASH_ADD_INT(pHt, key, pNode);
+
+        }
+        else
+        {
+            // we found a duplicate
+            if((i - pNode->val) <= k)
+            {
+                //printf("[%d][%d]\n", i ,pNode->val);
+                HASH_CLEAR(hh, pHt);
+                return true;
+            }
+            else
+            {
+                pNode->val = i;
+            }
+        }
+
+    }
+    HASH_CLEAR(hh, pHt);
+    return false;
+}
